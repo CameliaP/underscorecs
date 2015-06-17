@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +25,7 @@ namespace UnderscoreCs.Tests {
 		public void Each_GivenIEnumerable_AndIteratee_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<string> list = new[] {"A", "B", "C"};
 			var mock = new Mock<IObserver<string>>(MockBehavior.Loose);
-			Action<string> iteratee = foo => { mock.Object.OnNext(foo); };
+			Action<string> iteratee = element => { mock.Object.OnNext(element); };
 
 			_.Each(list, iteratee);
 
@@ -42,7 +43,7 @@ namespace UnderscoreCs.Tests {
 		public void Each_GivenArbitraryTypeForList_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
 			var mock = new Mock<IObserver<Foo>>(MockBehavior.Loose);
-			Action<Foo> iteratee = foo => { mock.Object.OnNext(foo); };
+			Action<Foo> iteratee = element => { mock.Object.OnNext(element); };
 
 			_.Each(list, iteratee);
 
@@ -55,8 +56,8 @@ namespace UnderscoreCs.Tests {
 		public void Each_GivenIEnumerable_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<string> list = new[] { "D", "C", "A", "B" };
 			var mock = new Mock<IObserver<Tuple<string, int>>>(MockBehavior.Loose);
-			Action<string, int> iteratee = (foo, index) => {
-				mock.Object.OnNext(new Tuple<string, int>(foo, index));
+			Action<string, int> iteratee = (element, index) => {
+				mock.Object.OnNext(new Tuple<string, int>(element, index));
 			};
 
 			_.Each(list, iteratee);
@@ -71,8 +72,8 @@ namespace UnderscoreCs.Tests {
 		public void Each_GivenArbitraryTypeForList_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
 			var mock = new Mock<IObserver<Tuple<Foo, int>>>(MockBehavior.Loose);
-			Action<Foo, int> iteratee = (foo, index) => {
-				mock.Object.OnNext(new Tuple<Foo, int>(foo, index));
+			Action<Foo, int> iteratee = (element, index) => {
+				mock.Object.OnNext(new Tuple<Foo, int>(element, index));
 			};
 
 			_.Each(list, iteratee);
