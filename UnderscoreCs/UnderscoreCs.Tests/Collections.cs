@@ -50,6 +50,34 @@ namespace UnderscoreCs.Tests {
 			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "B")));
 			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "C")));
 		}
+
+		[TestMethod]
+		public void Each_GivenIEnumerable_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
+			IEnumerable<string> list = new[] { "C", "A", "B" };
+			var mock = new Mock<IObserver<Tuple<string, int>>>(MockBehavior.Loose);
+			Action<string, int> iteratee = (foo, index) => {
+				mock.Object.OnNext(new Tuple<string, int>(foo, index));
+			};
+
+			_.Each(list, iteratee);
+
+			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "A" && t.Item2 == 2)));
+			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "B" && t.Item2 == 3)));
+			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "C" && t.Item2 == 1)));
+		}
+
+		#endregion
+
+		#region map
+
+		/// <summary>
+		/// map		<code>_.map(list, iteratee, [context])</code>	Alias: collect  
+		/// Produces a new array of values by mapping each value in list through a
+		/// transformation function (iteratee). The <code>iteratee</code> is passed three arguments: the value,
+		/// then the <code>index</code> (or <code>key</code>) of the iteration, and finally a reference to the entire <code>list</code>.
+		/// </summary>
+		public string MapDoc;
+
 		#endregion
 	}
 }

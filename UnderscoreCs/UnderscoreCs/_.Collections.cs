@@ -13,5 +13,9 @@ namespace UnderscoreCs {
 				iteratee(item);
 			}
 		}
+
+		public static void Each(IEnumerable<string> list, Action<string, int> iteratee) {
+			throw new NotImplementedException();
+		}
 	}
 }
