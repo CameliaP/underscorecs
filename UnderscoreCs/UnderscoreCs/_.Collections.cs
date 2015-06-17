@@ -15,7 +15,11 @@ namespace UnderscoreCs {
 		}
 
 		public static void Each(IEnumerable<string> list, Action<string, int> iteratee) {
-			throw new NotImplementedException();
+			int index = 0;
+			foreach (var item in list) {
+				iteratee(item, index);
+				index += 1;
+			}
 		}
 	}
 }

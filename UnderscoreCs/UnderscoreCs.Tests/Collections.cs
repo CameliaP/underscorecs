@@ -53,7 +53,7 @@ namespace UnderscoreCs.Tests {
 
 		[TestMethod]
 		public void Each_GivenIEnumerable_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
-			IEnumerable<string> list = new[] { "C", "A", "B" };
+			IEnumerable<string> list = new[] { "D", "C", "A", "B" };
 			var mock = new Mock<IObserver<Tuple<string, int>>>(MockBehavior.Loose);
 			Action<string, int> iteratee = (foo, index) => {
 				mock.Object.OnNext(new Tuple<string, int>(foo, index));
@@ -64,6 +64,7 @@ namespace UnderscoreCs.Tests {
 			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "A" && t.Item2 == 2)));
 			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "B" && t.Item2 == 3)));
 			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "C" && t.Item2 == 1)));
+			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "D" && t.Item2 == 0)));
 		}
 
 		#endregion
