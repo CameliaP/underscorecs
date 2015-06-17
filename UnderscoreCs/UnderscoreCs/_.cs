@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace UnderscoreCs {
-	public static class _ {
-		public static void Each(IEnumerable<string> list, Action<string> iteratee) {
-			foreach (string item in list) {
-				iteratee(item);
-			}
-		}
+﻿namespace UnderscoreCs {
+	/// <summary>
+	/// The _ class is modelled after the _ object defined by the Underscore.js library at http://underscorejs.org.
+	/// The authors of this package have no affiliation with the authors or maintainers of that project,
+	/// and any similarities between the packages are purely cosmetic or coincidental.
+	/// </summary>
+	public static partial class _ {
 	}
 }
