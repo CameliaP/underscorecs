@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UnderscoreCs;
 
 namespace UnderscoreCs.Tests {
 	[TestClass]
