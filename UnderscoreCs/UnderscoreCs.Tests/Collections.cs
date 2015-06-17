@@ -23,7 +23,7 @@ namespace UnderscoreCs.Tests {
 		[TestMethod]
 		public void Each_GivenIEnumerable_AndIteratee_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<string> list = new[] {"A", "B", "C"};
-			Mock<IObserver<string>> mock = new Mock<IObserver<string>>(MockBehavior.Loose);
+			var mock = new Mock<IObserver<string>>(MockBehavior.Loose);
 			Action<string> iteratee = foo => { mock.Object.OnNext(foo); };
 
 			_.Each(list, iteratee);
@@ -33,6 +33,23 @@ namespace UnderscoreCs.Tests {
 			mock.Verify(m => m.OnNext("C"));
 		}
 
+
+		public class Foo {
+			public string Bar { get; set; }
+		}
+
+		[TestMethod]
+		public void Each_GivenArbitraryTypeForList_WhenCalled_ThenEachElementInListIsVisited() {
+			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
+			var mock = new Mock<IObserver<Foo>>(MockBehavior.Loose);
+			Action<Foo> iteratee = foo => { mock.Object.OnNext(foo); };
+
+			_.Each(list, iteratee);
+
+			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "A")));
+			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "B")));
+			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "C")));
+		}
 		#endregion
 	}
 }
