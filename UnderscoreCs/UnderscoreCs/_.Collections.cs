@@ -14,7 +14,7 @@ namespace UnderscoreCs {
 			}
 		}
 
-		public static void Each(IEnumerable<string> list, Action<string, int> iteratee) {
+		public static void Each<TList>(IEnumerable<TList> list, Action<TList, int> iteratee) {
 			int index = 0;
 			foreach (var item in list) {
 				iteratee(item, index);

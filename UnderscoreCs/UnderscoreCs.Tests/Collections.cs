@@ -67,6 +67,21 @@ namespace UnderscoreCs.Tests {
 			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "D" && t.Item2 == 0)));
 		}
 
+		[TestMethod]
+		public void Each_GivenArbitraryTypeForList_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
+			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
+			var mock = new Mock<IObserver<Tuple<Foo, int>>>(MockBehavior.Loose);
+			Action<Foo, int> iteratee = (foo, index) => {
+				mock.Object.OnNext(new Tuple<Foo, int>(foo, index));
+			};
+
+			_.Each(list, iteratee);
+
+			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "A" && t.Item2 == 0)));
+			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "B" && t.Item2 == 1)));
+			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "C" && t.Item2 == 2)));
+		}
+		
 		#endregion
 
 		#region map
