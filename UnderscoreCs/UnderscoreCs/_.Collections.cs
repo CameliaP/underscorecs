@@ -23,7 +23,9 @@ namespace UnderscoreCs {
 		}
 
 		public static void Each<TValue, TKey>(IEnumerable<KeyValuePair<TKey, TValue>> list, Action<TValue, TKey> iteratee) {
-			throw new NotImplementedException();
+			foreach (var item in list) {
+				iteratee(item.Value, item.Key);
+			}
 		}
 	}
 }
