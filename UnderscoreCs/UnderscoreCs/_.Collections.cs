@@ -27,5 +27,9 @@ namespace UnderscoreCs {
 				iteratee(item.Value, item.Key);
 			}
 		}
+
+		public static void Each<TValue, TKey>(IEnumerable<KeyValuePair<TKey, TValue>> list, Action<TValue> iteratee) {
+			Each(list, (v, k) => iteratee(v));
+		}
 	}
 }
