@@ -86,6 +86,20 @@ namespace UnderscoreCs.Tests {
 			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "C" && (int)v["index"] == 2)));
 		}
 
+		[TestMethod]
+		public void Each_GivenADictionaryForList_WhenCalled_ThenIterateePassesKeyAndValue() {
+			Dictionary<string, int> list = new Dictionary<string, int>() {{"Foo", -1}, {"Bar", -2}, {"Baz", -3}};
+			var mock = new Mock<IObserver<Duck>>(MockBehavior.Loose);
+			Action<int, string> iteratee = (value, key) => {
+				mock.Object.OnNext(new Duck {{"key", key}, {"value", value}});
+			};
+
+			_.Each(list, iteratee);
+
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["key"] == "Foo" && (int)v["value"] == -1)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["key"] == "Bar" && (int)v["value"] == -2)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["key"] == "Baz" && (int)v["value"] == -3)));
+		}
 		#endregion
 
 		#region map

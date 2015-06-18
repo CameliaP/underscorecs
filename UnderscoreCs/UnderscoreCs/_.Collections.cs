@@ -21,5 +21,9 @@ namespace UnderscoreCs {
 				index += 1;
 			}
 		}
+
+		public static void Each<TValue, TKey>(IEnumerable<KeyValuePair<TKey, TValue>> list, Action<TValue, TKey> iteratee) {
+			throw new NotImplementedException();
+		}
 	}
 }
