@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace UnderscoreCs.Tests {
+	using Duck = Dictionary<string, object>;
+
 	[TestClass]
 	public class Collections {
-
 		#region each
 
 		/// <summary>
@@ -24,16 +24,17 @@ namespace UnderscoreCs.Tests {
 		[TestMethod]
 		public void Each_GivenIEnumerable_AndIteratee_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<string> list = new[] {"A", "B", "C"};
-			var mock = new Mock<IObserver<string>>(MockBehavior.Loose);
-			Action<string> iteratee = element => { mock.Object.OnNext(element); };
+			var mock = new Mock<IObserver<Duck>>(MockBehavior.Loose);
+			Action<string> iteratee = element => {
+				mock.Object.OnNext(new Duck {{"element", element}});
+			};
 
 			_.Each(list, iteratee);
 
-			mock.Verify(m => m.OnNext("A"));
-			mock.Verify(m => m.OnNext("B"));
-			mock.Verify(m => m.OnNext("C"));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "A")));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "B")));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "C")));
 		}
-
 
 		public class Foo {
 			public string Bar { get; set; }
@@ -42,47 +43,49 @@ namespace UnderscoreCs.Tests {
 		[TestMethod]
 		public void Each_GivenArbitraryTypeForList_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
-			var mock = new Mock<IObserver<Foo>>(MockBehavior.Loose);
-			Action<Foo> iteratee = element => { mock.Object.OnNext(element); };
-
-			_.Each(list, iteratee);
-
-			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "A")));
-			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "B")));
-			mock.Verify(m => m.OnNext(It.Is<Foo>(f => f.Bar == "C")));
-		}
-
-		[TestMethod]
-		public void Each_GivenIEnumerable_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
-			IEnumerable<string> list = new[] { "D", "C", "A", "B" };
-			var mock = new Mock<IObserver<Tuple<string, int>>>(MockBehavior.Loose);
-			Action<string, int> iteratee = (element, index) => {
-				mock.Object.OnNext(new Tuple<string, int>(element, index));
+			var mock = new Mock<IObserver<Duck>>(MockBehavior.Loose);
+			Action<Foo> iteratee = element => {
+				mock.Object.OnNext(new Duck {{"element", element}});
 			};
 
 			_.Each(list, iteratee);
 
-			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "A" && t.Item2 == 2)));
-			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "B" && t.Item2 == 3)));
-			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "C" && t.Item2 == 1)));
-			mock.Verify(m => m.OnNext(It.Is<Tuple<string, int>>(t => t.Item1 == "D" && t.Item2 == 0)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "A")));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "B")));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "C")));
+		}
+
+		[TestMethod]
+		public void Each_GivenIEnumerable_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
+			IEnumerable<string> list = new[] {"D", "C", "A", "B"};
+			var mock = new Mock<IObserver<Duck>>(MockBehavior.Loose);
+			Action<string, int> iteratee = (element, index) => {
+				mock.Object.OnNext(new Duck {{"element", element}, {"index", index}});
+			};
+
+			_.Each(list, iteratee);
+
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "A" && (int)v["index"] == 2)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "B" && (int)v["index"] == 3)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "C" && (int)v["index"] == 1)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => (string)v["element"] == "D" && (int)v["index"] == 0)));
 		}
 
 		[TestMethod]
 		public void Each_GivenArbitraryTypeForList_AndIterateeThatTakesInt_WhenCalled_ThenEachElementInListIsVisited() {
 			IEnumerable<Foo> list = new[] {new Foo {Bar = "A"}, new Foo {Bar = "B"}, new Foo {Bar = "C"}};
-			var mock = new Mock<IObserver<Tuple<Foo, int>>>(MockBehavior.Loose);
+			var mock = new Mock<IObserver<Duck>>(MockBehavior.Loose);
 			Action<Foo, int> iteratee = (element, index) => {
-				mock.Object.OnNext(new Tuple<Foo, int>(element, index));
+				mock.Object.OnNext(new Duck {{"element", element}, {"index", index}});
 			};
 
 			_.Each(list, iteratee);
 
-			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "A" && t.Item2 == 0)));
-			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "B" && t.Item2 == 1)));
-			mock.Verify(m => m.OnNext(It.Is<Tuple<Foo, int>>(t => t.Item1.Bar == "C" && t.Item2 == 2)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "A" && (int)v["index"] == 0)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "B" && (int)v["index"] == 1)));
+			mock.Verify(m => m.OnNext(It.Is<Duck>(v => ((Foo)v["element"]).Bar == "C" && (int)v["index"] == 2)));
 		}
-		
+
 		#endregion
 
 		#region map
