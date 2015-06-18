@@ -12,11 +12,11 @@ namespace UnderscoreCs.Tests {
 
 		/// <summary>
 		/// http://underscorejs.org/#each
-		/// each	<code>_.each(list, iteratee, [context])</code>	Alias: forEach 
+		/// each	<c>_.each(list, iteratee, [context])</c>	Alias: forEach 
 		/// Iterates over a list of elements, yielding each in turn to an iteratee function.
 		/// The iteratee is bound to the context object, if one is passed. Each invocation of iteratee
-		/// is called with three arguments: <code>(element, index, list)</code>.
-		/// If list is a JavaScript object, iteratee's arguments will be <code>(value, key, list)</code>.
+		/// is called with three arguments: <c>(element, index, list)</c>.
+		/// If list is a JavaScript object, iteratee's arguments will be <c>(value, key, list)</c>.
 		/// Returns the list for chaining.
 		/// </summary>
 		public string EachDoc;
@@ -121,10 +121,10 @@ namespace UnderscoreCs.Tests {
 		#region map
 
 		/// <summary>
-		/// map		<code>_.map(list, iteratee, [context])</code>	Alias: collect  
+		/// map		<c>_.map(list, iteratee, [context])</c>	Alias: collect  
 		/// Produces a new array of values by mapping each value in list through a
-		/// transformation function (iteratee). The <code>iteratee</code> is passed three arguments: the value,
-		/// then the <code>index</code> (or <code>key</code>) of the iteration, and finally a reference to the entire <code>list</code>.
+		/// transformation function (iteratee). The <c>iteratee</c> is passed three arguments: the value,
+		/// then the <c>index</c> (or <c>key</c>) of the iteration, and finally a reference to the entire <c>list</c>.
 		/// </summary>
 		public string MapDoc;
 
